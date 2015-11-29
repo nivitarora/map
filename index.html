@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>the map</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script>
+
+/*
+var newYork = new google.maps.LatLng(41.850033, -87.6500523); //[43.9, -79.1, 41.8, -74.0];
+var maine = new google.maps.LatLng(61.2180556, -149.9002778); //[45.2, -71.0, 44.6, -67.2];
+var vermont = new google.maps.LatLng(19.4270499, -99.1275711); //[44.9, -73.2, 42.6, -72.5];
+var colorado = new google.maps.LatLng(40, -108); //[40.8, -108.9, 37.0, -102.2];
+var oregon = new google.maps.LatLng(50, -100); //[46.2, -123.7, 42.1, -117.0];
+var northDakota = new google.maps.LatLng(48, -103); //[48.8, -103.8, 46.1, -96.6];
+var kansas = new google.maps.LatLng(39, -101); //[39.9, -101.0, 36.9, -94.6];
+var utah = new google.maps.LatLng(41, -114); //[41.6, -113.6, 37.0, -108.9];
+var iowa = new google.maps.LatLng(43, -96); //[43.1, -96.8, 40.7, -91.1];
+var alabama = new google.maps.LatLng(34, -88); //[34.6, -88.0, 30.8, -85.1];
+*/
+
+var newYork = [43.9, -79.1, 41.8, -74.0];
+var maine = [45.2, -71.0, 44.6, -67.2];
+var vermont = [44.9, -73.2, 42.6, -72.5];
+var colorado = [40.8, -108.9, 37.0, -102.2];
+var oregon = [46.2, -123.7, 42.1, -117.0];
+var northDakota = [48.8, -103.8, 46.1, -96.6];
+var kansas = [39.9, -101.0, 36.9, -94.6];
+var utah = [41.6, -113.6, 37.0, -108.9];
+var iowa = [43.1, -96.8, 40.7, -91.1];
+var alabama = [34.6, -88.0, 30.8, -85.1];
+
+var stateNames = ['New York', 'Maine', 'Vermont', 'Colorado', 'Oregon', 'North Dakota', 'Kansas', 'Utah', 'Iowa', 'Alabama'];
+var capitals = ['Albany', 'Augusta', 'Montpelier', 'Denver', 'Salem', 'Bismark', 'Topeka', 'Salt Lake City', 'Des Moines', 'Montgomery'];
+
+function initialize() {
+  var mapOptions = {
+    zoom: 4,
+    center: new google.maps.LatLng(-25.363882,131.044922)
+  };
+  var map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+
+  google.maps.event.addListener(map, 'click', function(e) {
+    placeMarker(e.latLng, map);
+  });
+}
+
+function placeMarker(position, map) {
+  var marker = new google.maps.Marker({
+    position: position,
+    map: map
+  });
+  map.panTo(position);
+  //can use "geolocation" to find state automatically?? -- administrative_area_level_1
+  if(newYork[2] < position.lat() && position.lat() < newYork[0] && newYork[1] < position.lng() && position.lng() < newYork[3]){
+    var capital = "Albany";
+    var state = "New York";
+    quiz(capital, state)
+    stateName(marker, capital, state)
+  }
+  else if(colorado[2] < position.lat() && position.lat() < colorado[0] && colorado[1] < position.lng() && position.lng() < colorado[3]){
+    var capital = "Denver";
+    var state = "Colorado";
+    quiz(capital, state)
+    stateName(marker, capital, state)
+  }
+}
+
+function quiz(capital, state){
+  alert("you have clicked on " + state);
+  var guess = prompt("guess its capital (type in lowercase)");
+  while (guess != capital.toLowerCase()){
+    if (guess === null){
+      break;
+    }
+    else{
+      var guess = prompt("nah guess again (type in lowercase)");
+    }
+  }
+  if (guess === capital.toLowerCase()){
+      alert("yup! the capital of " + String(state) + " is " + String(capital));
+  }
+}
+
+function stateName(marker, capital, state){
+  var infowindow = new google.maps.InfoWindow({
+    content: capital + ", " + state 
+  });
+  google.maps.event.addListener(marker, 'click', function() {
+    infowindow.open(marker.get('map'), marker);
+  });
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+</html>
